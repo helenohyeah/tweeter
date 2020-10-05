@@ -40,10 +40,19 @@
 
     <!-- Page-specific (main) content here -->
     <main class="container">
-      <h1>Heading for testing</h1>
-      <p>Paragraph for testing</p>
-      <h1>Another heading</h1>
-      <p>Another paragraph</p>
+
+      <!-- Web form to submit tweets -->
+      <section class="new-tweet">
+        <h2>Compose Tweet</h2>
+        <form method="POST" action="/tweets">
+          <label for="tweet-text">What are you humming about?</label>
+          <textarea name="text" id="tweet-text"></textarea>
+          <div>
+            <button type="submit">Tweet</button>
+            <output name="counter" class="counter" for="tweet-text">140</output>
+          </div>
+        </form>
+      </section>
     </main>
   </body>
 </html>
