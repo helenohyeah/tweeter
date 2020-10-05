@@ -1,0 +1,9 @@
+header {
+  height: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #d69821;
+  background-image: url("https://www.transparenttextures.com/patterns/tree-bark.png");
+}
