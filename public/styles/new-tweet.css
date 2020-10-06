@@ -4,7 +4,6 @@
 }
 
 .new-tweet label {
-  font-size: 18px;
   font-weight: 700;
 }
 
@@ -28,7 +27,6 @@
 
 .new-tweet div button {
   font-family: 'Bungee', cursive;
-  font-size: 16px;
   border: none;
   background-color: #4056A1;
   color: #FFF;
@@ -37,6 +35,10 @@
 
 .counter {
   font-family: 'Bungee', cursive;
-  font-size: 16px;
   padding: 0.25em;
+  color: #545149;
+}
+
+.invalid {
+  color: #FF0000;
 }
