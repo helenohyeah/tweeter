@@ -1,4 +1,5 @@
 .new-tweet {
+  margin: 20px 0;
   display: flex;
   flex-direction: column;
 }
@@ -14,6 +15,7 @@
   background: transparent;
   outline: none;
   border-width: 0 0 4px;
+  border-color: #545149;
 }
 
 #tweet-text:focus {
