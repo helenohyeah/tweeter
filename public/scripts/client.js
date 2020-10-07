@@ -11,18 +11,26 @@ $(document).ready(function() {
 
   // submit handler to post a new tweet asynchronously
   $form.on('submit', function(e) {
+    // prevent reload
     e.preventDefault();
 
-    // error handling
+    const showError = (msg) => {
+      const $error = $('.error-message');
+      $error.html(`<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;${msg}`);
+      $error.css('display', 'visible');
+      $error.slideDown(100);
+    };
+    
+    // show error if tweet is empty or too long
     const msg = $textarea.val();
     if (msg.length === 0) {
-      alert('Error: Nothing in tweet')
+      showError('Empty tweet alert! No empty tweets allowed.');
     } else if (msg.length > 140) {
-      // this tweet is exactly exactly exactly exactly exactly exactly exactly exactly exactly exactly  exactly exactly exactly exactly 141 characters
-      alert('Error: Tweet exceeds 140 characters');
+      showError('Too many characters! Shorten your tweet please.');
      
     // no errors => send post request
     } else {
+      $error.slideUp();
       $.ajax('/tweets', { method: 'POST', data: $(this).serialize() })
         .then((res) => {
           return $.ajax('/tweets', { method: 'GET' });
