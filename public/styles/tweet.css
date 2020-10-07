@@ -14,7 +14,6 @@
 .tweet header {
   display: flex;
   align-items: center;
-
 }
 
 .tweet header img {
@@ -25,9 +24,13 @@
 .tweet header h2 {
   flex-grow: 2;
   margin: 0 0.5em;
+  font-size: 24px;
+  font-weight: normal;
 }
 
 .tweet header p {
+  font-size: 24px;
+  font-weight: bold;
   color: rgba(84, 81, 73, 0.5);
 }
 
@@ -40,5 +43,11 @@
   padding: 0 1em;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 14px;
+}
+
+.tweet footer div i {
+  margin: 0 0.25em;
+  color: #4056A1;
 }
