@@ -12,30 +12,34 @@ $(document).ready(function() {
   // submit handler to post a new tweet asynchronously
   $form.on('submit', function(e) {
     e.preventDefault();
-    
+
     // error handling
     const msg = $textarea.val();
     if (msg.length === 0) {
       alert('Error: Nothing in tweet')
     } else if (msg.length > 140) {
       // this tweet is exactly exactly exactly exactly exactly exactly exactly exactly exactly exactly  exactly exactly exactly exactly 141 characters
-      alert('Error: Tweet exceeds 140 characcters');
+      alert('Error: Tweet exceeds 140 characters');
      
     // no errors => send post request
     } else {
       $.ajax('/tweets', { method: 'POST', data: $(this).serialize() })
-        .then(function() {
+        .then((res) => {
+          return $.ajax('/tweets', { method: 'GET' });
+        })
+        .then((res) => {
           // show the new tweet below the form
-          $.ajax('/tweets', { method: 'GET' })
-            .then(function(tweets) {
-              const newTweet = tweets[tweets.length - 1];
-              const newTweetElement = createTweetElement(newTweet);
-              $('#tweets-container').prepend(newTweetElement);
-            })
-        }).then(function() {
+          const newTweet = res[res.length - 1];
+          const newTweetElement = createTweetElement(newTweet);
+          $('#tweets-container').prepend(newTweetElement);
+        })
+        .then((res) => {
           // clear the form
           $textarea.val('');
         })
+        .fail((err) => {
+          console.log('Error:', err);
+        });
     }
   });
 
@@ -45,6 +49,9 @@ $(document).ready(function() {
       .then(function(tweets) {
         renderTweets(tweets);
       })
+      .fail((err) => {
+        console.log('Error:', err);
+      });
   };
   loadTweets();
 
@@ -59,6 +66,13 @@ $(document).ready(function() {
     const getTimeSince = (days) => days === 1 ? `${days} day ago` : `${days} days ago`;
     const timeSince = getTimeSince(diffInDays);
 
+    // escape function to prevent XSS
+    const escape = (str) => {
+      let div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    };
+
     let $tweet = $(`
       <article class="tweet">
         <header>
@@ -67,7 +81,7 @@ $(document).ready(function() {
           <p>${tweet.user.handle}</p>
         </header>
         <section>
-          <p>${tweet.content.text}</p>
+          <p>${escape(tweet.content.text)}</p>
         </section>
         <footer>
           <p>${timeSince}</p>
@@ -86,8 +100,8 @@ $(document).ready(function() {
   const renderTweets = (tweets) => {
     tweets.forEach((tweet) => {
       const $tweet = createTweetElement(tweet);
-      $('#tweets-container').append($tweet);
+      $('#tweets-container').prepend($tweet);
     });
   };
-  
+
 });
