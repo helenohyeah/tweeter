@@ -12,11 +12,9 @@ $(document).ready(function() {
   // submit handler to post a new tweet asynchronously
   $form.on('submit', function(e) {
     e.preventDefault();
-    const msg = $textarea.val();
-    console.log('msg>>', msg);
-    console.log('msg.length>>', msg.length);
     
     // error handling
+    const msg = $textarea.val();
     if (msg.length === 0) {
       alert('Error: Nothing in tweet')
     } else if (msg.length > 140) {
@@ -25,41 +23,40 @@ $(document).ready(function() {
      
     // no errors => send post request
     } else {
-      const data = $(this).serialize();
-      $.ajax('/tweets', { method: 'POST', data })
+      $.ajax('/tweets', { method: 'POST', data: $(this).serialize() })
         .then(function() {
-          // clears the form
+          // show the new tweet below the form
+          $.ajax('/tweets', { method: 'GET' })
+            .then(function(tweets) {
+              const newTweet = tweets[tweets.length - 1];
+              const newTweetElement = createTweetElement(newTweet);
+              $('#tweets-container').prepend(newTweetElement);
+            })
+        }).then(function() {
+          // clear the form
           $textarea.val('');
         })
-        // .then(function () {
-        //   $.ajax('/tweets', { method: 'GET' })
-        // }).then(function (tweets) {
-        //   renderTweets(tweets);
-        // });
     }
-
   });
 
-  // requests array of tweets
+  // requests array of tweets on page load
   const loadTweets = () => {
     $.ajax('/tweets', { method: 'GET' })
-      .then(function (tweets) {
+      .then(function(tweets) {
         renderTweets(tweets);
       })
   };
-
   loadTweets();
 
   // takes in a tweet object and returns HTML structure
   const createTweetElement = (tweet) => {
-
-    const getTimeSince = (days) => days === 1 ? `${days} day ago` : `${days} days ago`;
-
-    // turns timestamp into X days ago
+    
+    // turn timestamp into X days ago
     const today = Date.now();
     const created = tweet['created_at'];
     const diffInMS = today - created;
     const diffInDays = Math.floor(diffInMS / (1000 * 60 * 60 * 24));
+    const getTimeSince = (days) => days === 1 ? `${days} day ago` : `${days} days ago`;
     const timeSince = getTimeSince(diffInDays);
 
     let $tweet = $(`
@@ -92,31 +89,5 @@ $(document).ready(function() {
       $('#tweets-container').append($tweet);
     });
   };
-
-  // const data = [
-  //   {
-  //     "user": {
-  //       "name": "Newton",
-  //       "avatars": "https://i.imgur.com/73hZDYK.png"
-  //       ,
-  //       "handle": "@SirIsaac"
-  //     },
-  //     "content": {
-  //       "text": "If I have seen further it is by standing on the shoulders of giants"
-  //     },
-  //     "created_at": 1461116232227
-  //   },
-  //   {
-  //     "user": {
-  //       "name": "Descartes",
-  //       "avatars": "https://i.imgur.com/nlhLi3I.png",
-  //       "handle": "@rd" },
-  //     "content": {
-  //       "text": "Je pense , donc je suis"
-  //     },
-  //     "created_at": 1461113959088
-  //   }
-  // ];
   
-  // renderTweets(data);
 });
