@@ -37,6 +37,7 @@
 .tweet section {
   padding: 0 0.5em;
   border-bottom: solid 4px #545149;
+  word-wrap: break-word;
 }
 
 .tweet footer {

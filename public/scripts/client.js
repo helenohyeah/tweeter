@@ -97,7 +97,7 @@ $(document).ready(function() {
       const diffInMS = today - created;
       const diffInDays = Math.floor(diffInMS / (1000 * 60 * 60 * 24));
       return (diffInDays === 1) ? `${diffInDays} day ago` : `${diffInDays} days ago`;
-    }
+    };
 
     // escape function to prevent XSS
     const escape = (str) => {

@@ -4,7 +4,7 @@
  *
  */
 
- $(document).ready(function() {
+$(document).ready(function() {
   
   $('textarea#tweet-text').on('keyup', function(e) {
     const maxChar = 140;
@@ -25,4 +25,4 @@
     // updates counter value
     counter.text(charCount);
   });
- });
+});
