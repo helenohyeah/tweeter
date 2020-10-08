@@ -7,26 +7,31 @@
 $(document).ready(function() {
 
   // element definitions
-  const $newTweetToggler = $('nav section');
+  const $composerToggler = $('nav section');
+  const $composer = $('.new-tweet');
   const $form = $('.new-tweet form');
-  const $newTweet = $('.new-tweet');
   const $error = $('.error-message');
   const $textarea = $('#tweet-text');
+  const $tweetsContainer = $('#tweets-container');
 
-  // click handler to to toggle Tweet Composer when clicking 'Write a new tweet'
-  $newTweetToggler.on('click', function(e) {
-    const $newTweet = $('.new-tweet');
-    if ($newTweet.css('display') == 'block') {
-      $newTweet.slideUp(100);
+  // show/hide new tweet composer when clicking 'Write a new tweet'
+  $composerToggler.on('click', function(e) {
+    // hide if showing
+    if ($composer.css('display') === 'block') {
+      $composer.slideUp(100);
+    // show if hidden
     } else {
-      $newTweet.css('display', 'visible');
-      $newTweet.slideDown(100);
+      $composer.css('display', 'visible');
+      $composer.slideDown(100);
       $textarea.focus();
-
+      // auto scroll to composer
+      $('body, html').animate({
+        scrollTop: $('main').offset().top - 120
+      }, 800);
     }
   });
 
-  // submit handler to post a new tweet asynchronously
+  // post a new tweet asynchronously
   $form.on('submit', function(e) {
     // prevent reload
     e.preventDefault();
@@ -49,18 +54,18 @@ $(document).ready(function() {
       $error.slideUp(100);
       $.ajax('/tweets', { method: 'POST', data: $(this).serialize() })
         .then((res) => {
-          return $.ajax('/tweets', { method: 'GET' });
-        })
-        .then((res) => {
-          // show the new tweet below the form
-          const newTweet = res[res.length - 1];
-          const newTweetElement = createTweetElement(newTweet);
-          $('#tweets-container').prepend(newTweetElement);
-        })
-        .then((res) => {
-          // clear the form
-          $newTweet.slideUp(100);
+          // empty tweet container
+          $tweetsContainer.empty();
+          // render all tweets including the new one
+          loadTweets();
+          // hide composer
+          $composer.slideUp(100);
+          // clear form
           $textarea.val('');
+          // autoscroll to new tweet
+          $('body, html').animate({
+            scrollTop: $('main').offset().top - 120
+          }, 800);
         })
         .fail((err) => {
           console.log('Error:', err);
@@ -68,28 +73,29 @@ $(document).ready(function() {
     }
   });
 
-  // requests array of tweets on page load
+  // gets all tweets and renders them
   const loadTweets = () => {
     $.ajax('/tweets', { method: 'GET' })
-      .then(function(tweets) {
-        renderTweets(tweets);
+      .then((res) => {
+        renderTweets(res);
       })
       .fail((err) => {
         console.log('Error:', err);
       });
   };
+  // do this on page load
   loadTweets();
 
   // takes in a tweet object and returns HTML structure
   const createTweetElement = (tweet) => {
     
-    // turn timestamp into X days ago
-    const today = Date.now();
-    const created = tweet['created_at'];
-    const diffInMS = today - created;
-    const diffInDays = Math.floor(diffInMS / (1000 * 60 * 60 * 24));
-    const getTimeSince = (days) => days === 1 ? `${days} day ago` : `${days} days ago`;
-    const timeSince = getTimeSince(diffInDays);
+    // given create date, returns X days ago
+    const getDaysSince = (created) => {
+      const today = Date.now();
+      const diffInMS = today - created;
+      const diffInDays = Math.floor(diffInMS / (1000 * 60 * 60 * 24));
+      return (diffInDays === 1) ? `${diffInDays} day ago` : `${diffInDays} days ago`;
+    }
 
     // escape function to prevent XSS
     const escape = (str) => {
@@ -97,7 +103,7 @@ $(document).ready(function() {
       div.appendChild(document.createTextNode(str));
       return div.innerHTML;
     };
-
+    
     let $tweet = $(`
       <article class="tweet">
         <header>
@@ -109,7 +115,7 @@ $(document).ready(function() {
           <p>${escape(tweet.content.text)}</p>
         </section>
         <footer>
-          <p>${timeSince}</p>
+          <p>${getDaysSince(tweet['created_at'])}</p>
           <div>
             <i class="fas fa-flag"></i>
             <i class="fas fa-retweet"></i>
@@ -121,11 +127,11 @@ $(document).ready(function() {
     return $tweet;
   };
 
-  // takes in array of tweet objects and renders each one in tweet-container
+  // takes in all tweets (array) and renders all of them in tweet-container
   const renderTweets = (tweets) => {
     tweets.forEach((tweet) => {
       const $tweet = createTweetElement(tweet);
-      $('#tweets-container').prepend($tweet);
+      $tweetsContainer.prepend($tweet);
     });
   };
 
