@@ -6,13 +6,25 @@
 
 $(document).ready(function() {
 
-  const $form = $('.new-tweet form');
-  const $textarea = $('#tweet-text');
+  // click handler to show/hide write a new tweet when clicking 'Write a new tweet'
+  const $toggleForm = $('nav section');
+  $toggleForm.on('click', function(e) {
+    const $newTweet = $('.new-tweet');
+    if ($newTweet.css('display') == 'block') {
+      $newTweet.slideUp(100);
+    } else {
+      $newTweet.css('display', 'visible');
+      $newTweet.slideDown(100);
+    }
+  });
 
   // submit handler to post a new tweet asynchronously
   $form.on('submit', function(e) {
     // prevent reload
     e.preventDefault();
+
+    const $form = $('.new-tweet form');
+    const $textarea = $('#tweet-text');
 
     const showError = (msg) => {
       const $error = $('.error-message');
