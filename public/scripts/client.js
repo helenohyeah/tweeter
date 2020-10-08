@@ -58,6 +58,8 @@ $(document).ready(function() {
           $tweetsContainer.empty();
           // render all tweets including the new one
           loadTweets();
+          // reset counter
+          $('.counter').text(140);
           // hide composer
           $composer.slideUp(100);
           // clear form
