@@ -6,15 +6,23 @@
 
 $(document).ready(function() {
 
-  // click handler to show/hide write a new tweet when clicking 'Write a new tweet'
-  const $toggleForm = $('nav section');
-  $toggleForm.on('click', function(e) {
+  // element definitions
+  const $newTweetToggler = $('nav section');
+  const $form = $('.new-tweet form');
+  const $newTweet = $('.new-tweet');
+  const $error = $('.error-message');
+  const $textarea = $('#tweet-text');
+
+  // click handler to to toggle Tweet Composer when clicking 'Write a new tweet'
+  $newTweetToggler.on('click', function(e) {
     const $newTweet = $('.new-tweet');
     if ($newTweet.css('display') == 'block') {
       $newTweet.slideUp(100);
     } else {
       $newTweet.css('display', 'visible');
       $newTweet.slideDown(100);
+      $textarea.focus();
+
     }
   });
 
@@ -22,12 +30,8 @@ $(document).ready(function() {
   $form.on('submit', function(e) {
     // prevent reload
     e.preventDefault();
-
-    const $form = $('.new-tweet form');
-    const $textarea = $('#tweet-text');
-
+    
     const showError = (msg) => {
-      const $error = $('.error-message');
       $error.html(`<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;${msg}`);
       $error.css('display', 'visible');
       $error.slideDown(100);
@@ -42,7 +46,7 @@ $(document).ready(function() {
      
     // no errors => send post request
     } else {
-      $error.slideUp();
+      $error.slideUp(100);
       $.ajax('/tweets', { method: 'POST', data: $(this).serialize() })
         .then((res) => {
           return $.ajax('/tweets', { method: 'GET' });
@@ -55,6 +59,7 @@ $(document).ready(function() {
         })
         .then((res) => {
           // clear the form
+          $newTweet.slideUp(100);
           $textarea.val('');
         })
         .fail((err) => {
