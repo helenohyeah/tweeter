@@ -41,6 +41,11 @@ body > header {
   height: 400px;
 }
 
+body > header > div > img {
+  width: 100%;
+  height: auto;
+}
+
 main {
   margin: auto;
   width: 90%;
@@ -60,9 +65,14 @@ main {
     align-items: center;
   }
 
-  body > header > img {
-    height: 75%;
+  body > header > div,
+  body > header > div > img {
+    height: 200px;
     width: auto;
+  }
+
+  body > header {
+    height: 250px;
   }
 
   main {
