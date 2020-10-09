@@ -11,6 +11,14 @@ This repository is the starter code for the project: Students will fork and clon
 3. Start the web server using the `npm run local` command. The app will be served at <http://localhost:8080/>.
 4. Go to <http://localhost:8080/> in your browser.
 
+## Screenshots
+View tweets on your feed\
+!["Create a new tiny url"](https://raw.githubusercontent.com/helenohyeah/tweeter/master/docs/view-tweets.png)\
+Write a new tweet ft. dynamic character counter\
+!["View your tiny urls"](https://github.com/helenohyeah/tweeter/blob/master/docs/compose-tweet.png?raw=true)\
+Optimized for mobile\
+!["Edit your tiny url"](https://github.com/helenohyeah/tweeter/blob/master/docs/smartphone-view.png?raw=true)
+
 ## Dependencies
 
 - Express
