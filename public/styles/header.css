@@ -1,0 +1,17 @@
+body > header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #d69821;
+  background-image: url("https://www.transparenttextures.com/patterns/tree-bark.png");
+  color: #FFF;
+  font-size: 32px;
+  margin-top: 120px;
+  height: 400px;
+}
+
+body > header > div > img {
+  width: 100%;
+  height: auto;
+}
